@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Color Code Viewer</title>
+  <link rel="icon" href="https://cdn.glitch.global/55c66d78-b0d0-42fd-90d2-5393e4f4b0a6/favicon.ico?v=1732576531695">
+  <style>
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #contentFrame {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <iframe id="contentFrame" frameborder="0" allowfullscreen=""
+    srcdoc="<html><head><base href=&quot;.&quot; target=&quot;_top&quot;>
+    <meta charset=&quot;utf-8&quot;>
+    <style>
+        html { box-sizing: border-box;}
+        *, *:before, *:after { margin: 0; padding: 0; box-sizing: inherit; }
+        body { background: url('https://cdn.glitch.global/55c66d78-b0d0-42fd-90d2-5393e4f4b0a6/IMG_5376(1).png?v=1738560463327') no-repeat fixed; background-size: cover; background-height: 100%; margin: 10px 10px 10px 10px;}
+        canvas {background: rgba(0, 0, 0, .50); padding: 10px; border-radius: 30px;}
+        label {color: white; font-size: 25px; font-family: TikiIsland;}
+        #history img { margin: 5px; background: rgba(0,0,0,.50); padding: 10px; border-radius: 30px;}
+        #history { display: inline; align-content: center;}
+        #scroll {height: calc(100vh - 250px); overflow: auto; margin-left: auto; margin-right: auto;}
+        textarea { margin-top: -64px; border-radius: 30px; padding: 20px; font-family: TikiIsland; width: 265px; margin-top: 10px; height: 110px; font-size: 20px; resize: none;}
+        form {display: block;}
+        button {font-size: 20px; border-radius: 30px; padding-left: 10px; padding-right: 10px; background: white; border: 3px solid rgba(255, 255, 255, 0.5); font-family: TikiIsland; width: 85px; cursor: pointer;}
+        button:hover {background: grey;}
+        input[type=&quot;text&quot;], input[type=&quot;submit&quot;], #autocomplete {height: 30px; border-radius: 30px; padding-left: 10px; padding-right: 10px;font-size: 20px; margin-left: 20px; width: 100px; text-align: center; font-family: TikiIsland; background-color: rgba(255, 255, 255);}
+        #gobutton {background: white; cursor: pointer;}
+        #gobutton:hover {background: grey;}
+        .cSlider {cursor: pointer;}
+        #layering {cursor: pointer;}
+        #colorLayerPicker {cursor: pointer;}
+        #colorbutton {width: 300px;}
+        #itemtext {width: 300px}
+        #autocomplete {width: 500px;}
+        .back {background: rgba(0, 0, 0, .50); padding: 10px; border-radius: 30px; margin-right: 10px; margin-bottom: 10px; display: inline-block;}
+        .back1 {background: rgba(0, 0, 0, .50); display: inline-block; padding: 13px; border-radius: 30px;}
+        .back, .back1 {height: 125px; text-align: center;}
+        .top {background: rgba(0, 0, 0, .50); padding: 10px; border-radius: 30px; margin-bottom: 15px; margin-top: 10px; display: inline-block; text-align: center;}
+        #color {margin-left: 5px; margin-right: 5px; color: rgba(255, 255, 255); font-family: TikiIsland;}
+        #colorslider {margin-top: 10px;}
+        #c1, #c2, #c3, #c4 {display: inline-block; width: 100px;}
+        #bottom {background: rgba(0, 0, 0, .50); padding: 10px; border-radius: 30px; margin-top: 10px; display: inline-block; height: 190px; float: left; margin-right: 10px;}
+        button[onclick] {width: 150px;}
+        input[type=&quot;number&quot;] {height: 30px; text-align: center; font-weight: bold; font-size: 20px; padding: 10px; border: 1px solid black; color: white; -moz-appearance: textfield; background: #7B3947; border-radius: 30px;}
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {-webkit-appearance: none; margin: 0;}
+        #boxes {width: 300px; height: 100px; overflow: auto; background-image: radial-gradient( circle farthest-corner at 92.3% 71.5%,  rgba(83,138,214,0.5) 0%, rgba(134,231,214,0.5) 90% ); resize: both;}
+        .box {display: inline-block; width: 40px; background: black; color: white; font-size: 20px; cursor: pointer; padding-top: 10px; padding-bottom: 10px; transition: transform .1s; font-family: TikiIsland;}
+        .box:hover {transform: scale(1.2);}
+        #palettebar, #opencloseheader {width: 100%; color: white; padding-top: 5px; padding-bottom: 5px; box-shadow: 3px 5px 10px rgba(0,0,0,0.5); position: relative; z-index: 1; background-image: radial-gradient( circle farthest-corner at 92.3% 71.5%,  rgba(83,138,214,1) 0%, rgba(134,231,214,1) 90% ); font-family: tikiisland}
+        #palettebar {cursor: pointer;}
+        #opencloseheader {cursor: move;}
+        #openclose {position: absolute; z-index: 2; box-shadow: 3px 5px 10px rgba(0,0,0,0.5);}
+        @font-face {font-family: 'TikiIsland'; font-style: normal; font-weight: 400; src: local('TikiIsland'), local('TikiIsland-Regular'), url(https://cdn.glitch.global/c02d6c08-daad-4d72-a774-d6a8dda99061/Tiki-Island.woff?v=1707411399311) format('woff');}
+    </style>
+    <link rel=&quot;stylesheet&quot; href=&quot;//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css&quot;>
+</head>
+<body>
+
+
+<div id=&quot;bottom&quot;>
+    <div><textarea name=&quot;quickIn&quot; placeholder=&quot;Animal|Animation|Item|Color&quot; id=&quot;quickIn&quot; cols=&quot;60&quot; rows=&quot;5&quot;></textarea></div><br>
+    <button id=&quot;quickGo&quot;>Load</button>
+    <button id=&quot;animate&quot;>Animate</button>
+    <button id=&quot;printAnimation&quot;>Print</button>
+</div>
+<form>
+    <div class=&quot;top&quot;>
+        <label for=&quot;autocomplete&quot;>Search For An Item...</label>
+        <input id=&quot;autocomplete&quot; class=&quot;ui-autocomplete-input&quot; autocomplete=&quot;off&quot;>
+    </div>
+      <button id=&quot;credits&quot; type=&quot;button&quot;>Credits</button>
+    <div id=&quot;middle&quot;>
+    <div class=&quot;back&quot;>
+        <label for=&quot;avatarId&quot;>Animal Id</label>
+        <input type=&quot;text&quot; id=&quot;avatarId&quot; name=&quot;avatarId&quot; placeholder=&quot;avatar thing&quot; value=&quot;1&quot;>
+        <br>
+
+        <label for=&quot;avatarId&quot;>Animation Id</label>
+        <input type=&quot;text&quot; name=&quot;categoryId&quot; placeholder=&quot;Category (25 big icon, 26 small)&quot; value=&quot;25&quot;>
+        <br>
+
+        <label for=&quot;avatarId&quot;>Design Id</label>
+        <input type=&quot;text&quot; name=&quot;layerId&quot; placeholder=&quot;layer id&quot; value=&quot;43&quot;>
+        <br>
+    </div>
+    <div class=&quot;back1&quot;>
+        <label for=&quot;avatarId&quot;>Color Code:</label>
+        <input type=&quot;text&quot; id=&quot;colorbutton&quot; name=&quot;color&quot; placeholder=&quot;leave blank for a random color&quot; value=&quot;&quot;>
+        <input id=&quot;gobutton&quot; type=&quot;submit&quot; value=&quot;Go!&quot;>
+        <input type=&quot;checkbox&quot; name=&quot;layering&quot; id=&quot;layering&quot;><span id=&quot;color&quot;></span><select id=&quot;colorLayerPicker&quot;></select>
+        <br>
+        <br>
+        <div id=&quot;colorslider&quot;>
+            <input type=&quot;number&quot; min=&quot;0&quot; max=&quot;255&quot; id=&quot;c1&quot; class=&quot;cSlider&quot;>
+            <input type=&quot;number&quot; min=&quot;0&quot; max=&quot;255&quot; id=&quot;c2&quot; class=&quot;cSlider&quot;>
+            <input type=&quot;number&quot; min=&quot;0&quot; max=&quot;255&quot; id=&quot;c3&quot; class=&quot;cSlider&quot;>
+            <input type=&quot;number&quot; min=&quot;0&quot; max=&quot;255&quot; id=&quot;c4&quot; class=&quot;cSlider&quot;>
+        </div>
+    </div>
+    </div>
+</form>
+<div id=&quot;openclose&quot; style=&quot;visibility: hidden;&quot;>
+<div id=&quot;opencloseheader&quot; align=&quot;center&quot;>Move</div>
+<div id=&quot;palettebar&quot; align=&quot;center&quot;>Close</div>
+      <div id=&quot;boxes&quot; align=&quot;center&quot;><div class=&quot;box&quot; id=&quot;colorpalette0&quot; style=&quot;background: #793647;&quot;>0</div><div class=&quot;box&quot; id=&quot;colorpalette1&quot; style=&quot;background: #762626;&quot;>1</div><div class=&quot;box&quot; id=&quot;colorpalette2&quot; style=&quot;background: #8b4c2b;&quot;>2</div><div class=&quot;box&quot; id=&quot;colorpalette3&quot; style=&quot;background: #9c8726;&quot;>3</div><div class=&quot;box&quot; id=&quot;colorpalette4&quot; style=&quot;background: #426b31;&quot;>4</div><div class=&quot;box&quot; id=&quot;colorpalette5&quot; style=&quot;background: #346851;&quot;>5</div><div class=&quot;box&quot; id=&quot;colorpalette6&quot; style=&quot;background: #396573;&quot;>6</div><div class=&quot;box&quot; id=&quot;colorpalette7&quot; style=&quot;background: #263876;&quot;>7</div><div class=&quot;box&quot; id=&quot;colorpalette8&quot; style=&quot;background: #463779;&quot;>8</div><div class=&quot;box&quot; id=&quot;colorpalette9&quot; style=&quot;background: #61316c;&quot;>9</div><div class=&quot;box&quot; id=&quot;colorpalette10&quot; style=&quot;background: #5c2e39;&quot;>10</div><div class=&quot;box&quot; id=&quot;colorpalette11&quot; style=&quot;background: #563520;&quot;>11</div><div class=&quot;box&quot; id=&quot;colorpalette12&quot; style=&quot;background: #6a4e31;&quot;>12</div><div class=&quot;box&quot; id=&quot;colorpalette13&quot; style=&quot;background: #6c643a;&quot;>13</div><div class=&quot;box&quot; id=&quot;colorpalette14&quot; style=&quot;background: #565a36;&quot;>14</div><div class=&quot;box&quot; id=&quot;colorpalette15&quot; style=&quot;background: #4b6351;&quot;>15</div><div class=&quot;box&quot; id=&quot;colorpalette16&quot; style=&quot;background: #33415e;&quot;>16</div><div class=&quot;box&quot; id=&quot;colorpalette17&quot; style=&quot;background: #3d3443;&quot;>17</div><div class=&quot;box&quot; id=&quot;colorpalette18&quot; style=&quot;background: #591d1d;&quot;>18</div><div class=&quot;box&quot; id=&quot;colorpalette19&quot; style=&quot;background: #6d7164;&quot;>19</div><div class=&quot;box&quot; id=&quot;colorpalette20&quot; style=&quot;background: #c5647d;&quot;>20</div><div class=&quot;box&quot; id=&quot;colorpalette21&quot; style=&quot;background: #be4b4b;&quot;>21</div><div class=&quot;box&quot; id=&quot;colorpalette22&quot; style=&quot;background: #e08654;&quot;>22</div><div class=&quot;box&quot; id=&quot;colorpalette23&quot; style=&quot;background: #fadb4d;&quot;>23</div><div class=&quot;box&quot; id=&quot;colorpalette24&quot; style=&quot;background: #73ae5a;&quot;>24</div><div class=&quot;box&quot; id=&quot;colorpalette25&quot; style=&quot;background: #5eab89;&quot;>25</div><div class=&quot;box&quot; id=&quot;colorpalette26&quot; style=&quot;background: #67a8bb;&quot;>26</div><div class=&quot;box&quot; id=&quot;colorpalette27&quot; style=&quot;background: #4b66be;&quot;>27</div><div class=&quot;box&quot; id=&quot;colorpalette28&quot; style=&quot;background: #7b66c6;&quot;>28</div><div class=&quot;box&quot; id=&quot;colorpalette29&quot; style=&quot;background: #a05aaf;&quot;>29</div><div class=&quot;box&quot; id=&quot;colorpalette30&quot; style=&quot;background: #965264;&quot;>30</div><div class=&quot;box&quot; id=&quot;colorpalette31&quot; style=&quot;background: #8c5c3d;&quot;>31</div><div class=&quot;box&quot; id=&quot;colorpalette32&quot; style=&quot;background: #ad8459;&quot;>32</div><div class=&quot;box&quot; id=&quot;colorpalette33&quot; style=&quot;background: #b1a669;&quot;>33</div><div class=&quot;box&quot; id=&quot;colorpalette34&quot; style=&quot;background: #8f9560;&quot;>34</div><div class=&quot;box&quot; id=&quot;colorpalette35&quot; style=&quot;background: #82a58b;&quot;>35</div><div class=&quot;box&quot; id=&quot;colorpalette36&quot; style=&quot;background: #5c6f99;&quot;>36</div><div class=&quot;box&quot; id=&quot;colorpalette37&quot; style=&quot;background: #675a70;&quot;>37</div><div class=&quot;box&quot; id=&quot;colorpalette38&quot; style=&quot;background: #903838;&quot;>38</div><div class=&quot;box&quot; id=&quot;colorpalette39&quot; style=&quot;background: #b8bdab;&quot;>39</div><div class=&quot;box&quot; id=&quot;colorpalette40&quot; style=&quot;background: #ee94ac;&quot;>40</div><div class=&quot;box&quot; id=&quot;colorpalette41&quot; style=&quot;background: #ed8383;&quot;>41</div><div class=&quot;box&quot; id=&quot;colorpalette42&quot; style=&quot;background: #ffb48a;&quot;>42</div><div class=&quot;box&quot; id=&quot;colorpalette43&quot; style=&quot;background: #ffec95;&quot;>43</div><div class=&quot;box&quot; id=&quot;colorpalette44&quot; style=&quot;background: #a8de90;&quot;>44</div><div class=&quot;box&quot; id=&quot;colorpalette45&quot; style=&quot;background: #95dbbd;&quot;>45</div><div class=&quot;box&quot; id=&quot;colorpalette46&quot; style=&quot;background: #98d4e6;&quot;>46</div><div class=&quot;box&quot; id=&quot;colorpalette47&quot; style=&quot;background: #839bed;&quot;>47</div><div class=&quot;box&quot; id=&quot;colorpalette48&quot; style=&quot;background: #a895ef;&quot;>48</div><div class=&quot;box&quot; id=&quot;colorpalette49&quot; style=&quot;background: #d190e0;&quot;>49</div><div class=&quot;box&quot; id=&quot;colorpalette50&quot; style=&quot;background: #cd8f9f;&quot;>50</div><div class=&quot;box&quot; id=&quot;colorpalette51&quot; style=&quot;background: #ca9d80;&quot;>51</div><div class=&quot;box&quot; id=&quot;colorpalette52&quot; style=&quot;background: #ddb890;&quot;>52</div><div class=&quot;box&quot; id=&quot;colorpalette53&quot; style=&quot;background: #ded39b;&quot;>53</div><div class=&quot;box&quot; id=&quot;colorpalette54&quot; style=&quot;background: #c5ca9a;&quot;>54</div><div class=&quot;box&quot; id=&quot;colorpalette55&quot; style=&quot;background: #afd1b9;&quot;>55</div><div class=&quot;box&quot; id=&quot;colorpalette56&quot; style=&quot;background: #95a7cf;&quot;>56</div><div class=&quot;box&quot; id=&quot;colorpalette57&quot; style=&quot;background: #a89bb0;&quot;>57</div><div class=&quot;box&quot; id=&quot;colorpalette58&quot; style=&quot;background: #ce7c7c;&quot;>58</div><div class=&quot;box&quot; id=&quot;colorpalette59&quot; style=&quot;background: #d7dcca;&quot;>59</div><div class=&quot;box&quot; id=&quot;colorpalette60&quot; style=&quot;background: #8b8a68;&quot;>60</div><div class=&quot;box&quot; id=&quot;colorpalette61&quot; style=&quot;background: #82727d;&quot;>61</div><div class=&quot;box&quot; id=&quot;colorpalette62&quot; style=&quot;background: #69838b;&quot;>62</div><div class=&quot;box&quot; id=&quot;colorpalette63&quot; style=&quot;background: #1a1a1a;&quot;>63</div><div class=&quot;box&quot; id=&quot;colorpalette64&quot; style=&quot;background: #666666;&quot;>64</div><div class=&quot;box&quot; id=&quot;colorpalette65&quot; style=&quot;background: #b3b3b3;&quot;>65</div><div class=&quot;box&quot; id=&quot;colorpalette66&quot; style=&quot;background: #987b35;&quot;>66</div><div class=&quot;box&quot; id=&quot;colorpalette67&quot; style=&quot;background: #80421e;&quot;>67</div><div class=&quot;box&quot; id=&quot;colorpalette68&quot; style=&quot;background: #07050c;&quot;>68</div><div class=&quot;box&quot; id=&quot;colorpalette69&quot; style=&quot;background: #eb6923;&quot;>69</div><div class=&quot;box&quot; id=&quot;colorpalette70&quot; style=&quot;background: #26632d;&quot;>70</div><div class=&quot;box&quot; id=&quot;colorpalette71&quot; style=&quot;background: #805912;&quot;>71</div><div class=&quot;box&quot; id=&quot;colorpalette72&quot; style=&quot;background: #20d998;&quot;>72</div><div class=&quot;box&quot; id=&quot;colorpalette73&quot; style=&quot;background: #d9cd20;&quot;>73</div><div class=&quot;box&quot; id=&quot;colorpalette74&quot; style=&quot;background: #080905;&quot;>74</div><div class=&quot;box&quot; id=&quot;colorpalette75&quot; style=&quot;background: #070a08;&quot;>75</div><div class=&quot;box&quot; id=&quot;colorpalette76&quot; style=&quot;background: #1c6075;&quot;>76</div><div class=&quot;box&quot; id=&quot;colorpalette77&quot; style=&quot;background: #060507;&quot;>77</div><div class=&quot;box&quot; id=&quot;colorpalette78&quot; style=&quot;background: #090303;&quot;>78</div><div class=&quot;box&quot; id=&quot;colorpalette79&quot; style=&quot;background: #0b0b0a;&quot;>79</div><div class=&quot;box&quot; id=&quot;colorpalette80&quot; style=&quot;background: #e7e5b4;&quot;>80</div><div class=&quot;box&quot; id=&quot;colorpalette81&quot; style=&quot;background: #dac2d3;&quot;>81</div><div class=&quot;box&quot; id=&quot;colorpalette82&quot; style=&quot;background: #b6dce7;&quot;>82</div><div class=&quot;box&quot; id=&quot;colorpalette83&quot; style=&quot;background: #333333;&quot;>83</div><div class=&quot;box&quot; id=&quot;colorpalette84&quot; style=&quot;background: #808080;&quot;>84</div><div class=&quot;box&quot; id=&quot;colorpalette85&quot; style=&quot;background: #cccccc;&quot;>85</div><div class=&quot;box&quot; id=&quot;colorpalette86&quot; style=&quot;background: #f7cd66;&quot;>86</div><div class=&quot;box&quot; id=&quot;colorpalette87&quot; style=&quot;background: #ce723e;&quot;>87</div><div class=&quot;box&quot; id=&quot;colorpalette88&quot; style=&quot;background: #612f25;&quot;>88</div><div class=&quot;box&quot; id=&quot;colorpalette89&quot; style=&quot;background: #100911;&quot;>89</div><div class=&quot;box&quot; id=&quot;colorpalette90&quot; style=&quot;background: #34944f;&quot;>90</div><div class=&quot;box&quot; id=&quot;colorpalette91&quot; style=&quot;background: #eea621;&quot;>91</div><div class=&quot;box&quot; id=&quot;colorpalette92&quot; style=&quot;background: #944c22;&quot;>92</div><div class=&quot;box&quot; id=&quot;colorpalette93&quot; style=&quot;background: #ee555d;&quot;>93</div><div class=&quot;box&quot; id=&quot;colorpalette94&quot; style=&quot;background: #eb5ba1;&quot;>94</div><div class=&quot;box&quot; id=&quot;colorpalette95&quot; style=&quot;background: #0d100e;&quot;>95</div><div class=&quot;box&quot; id=&quot;colorpalette96&quot; style=&quot;background: #2098d9;&quot;>96</div><div class=&quot;box&quot; id=&quot;colorpalette97&quot; style=&quot;background: #e13a74;&quot;>97</div><div class=&quot;box&quot; id=&quot;colorpalette98&quot; style=&quot;background: #0e0505;&quot;>98</div><div class=&quot;box&quot; id=&quot;colorpalette99&quot; style=&quot;background: #82d92b;&quot;>99</div><div class=&quot;box&quot; id=&quot;colorpalette100&quot; style=&quot;background: #faf8ca;&quot;>100</div><div class=&quot;box&quot; id=&quot;colorpalette101&quot; style=&quot;background: #eed8e6;&quot;>101</div><div class=&quot;box&quot; id=&quot;colorpalette102&quot; style=&quot;background: #cceff9;&quot;>102</div><div class=&quot;box&quot; id=&quot;colorpalette103&quot; style=&quot;background: #4d4d4d;&quot;>103</div><div class=&quot;box&quot; id=&quot;colorpalette104&quot; style=&quot;background: #999999;&quot;>104</div><div class=&quot;box&quot; id=&quot;colorpalette105&quot; style=&quot;background: #e6e6e6;&quot;>105</div><div class=&quot;box&quot; id=&quot;colorpalette106&quot; style=&quot;background: #ffe4a1;&quot;>106</div><div class=&quot;box&quot; id=&quot;colorpalette107&quot; style=&quot;background: #fca575;&quot;>107</div><div class=&quot;box&quot; id=&quot;colorpalette108&quot; style=&quot;background: #e1654c;&quot;>108</div><div class=&quot;box&quot; id=&quot;colorpalette109&quot; style=&quot;background: #140e16;&quot;>109</div><div class=&quot;box&quot; id=&quot;colorpalette110&quot; style=&quot;background: #8fdc9f;&quot;>110</div><div class=&quot;box&quot; id=&quot;colorpalette111&quot; style=&quot;background: #ffb870;&quot;>111</div><div class=&quot;box&quot; id=&quot;colorpalette112&quot; style=&quot;background: #ffd040;&quot;>112</div><div class=&quot;box&quot; id=&quot;colorpalette113&quot; style=&quot;background: #8c1414;&quot;>113</div><div class=&quot;box&quot; id=&quot;colorpalette114&quot; style=&quot;background: #f589bd;&quot;>114</div><div class=&quot;box&quot; id=&quot;colorpalette115&quot; style=&quot;background: #4b87bf;&quot;>115</div><div class=&quot;box&quot; id=&quot;colorpalette116&quot; style=&quot;background: #4ac3e8;&quot;>116</div><div class=&quot;box&quot; id=&quot;colorpalette117&quot; style=&quot;background: #45ae53;&quot;>117</div><div class=&quot;box&quot; id=&quot;colorpalette118&quot; style=&quot;background: #d32626;&quot;>118</div><div class=&quot;box&quot; id=&quot;colorpalette119&quot; style=&quot;background: #151614;&quot;>119</div><div class=&quot;box&quot; id=&quot;colorpalette120&quot; style=&quot;background: #853e3e;&quot;>120</div><div class=&quot;box&quot; id=&quot;colorpalette121&quot; style=&quot;background: #854b3e;&quot;>121</div><div class=&quot;box&quot; id=&quot;colorpalette122&quot; style=&quot;background: #85593e;&quot;>122</div><div class=&quot;box&quot; id=&quot;colorpalette123&quot; style=&quot;background: #85633e;&quot;>123</div><div class=&quot;box&quot; id=&quot;colorpalette124&quot; style=&quot;background: #85713e;&quot;>124</div><div class=&quot;box&quot; id=&quot;colorpalette125&quot; style=&quot;background: #857d3e;&quot;>125</div><div class=&quot;box&quot; id=&quot;colorpalette126&quot; style=&quot;background: #84853e;&quot;>126</div><div class=&quot;box&quot; id=&quot;colorpalette127&quot; style=&quot;background: #77853e;&quot;>127</div><div class=&quot;box&quot; id=&quot;colorpalette128&quot; style=&quot;background: #63853e;&quot;>128</div><div class=&quot;box&quot; id=&quot;colorpalette129&quot; style=&quot;background: #3e8565;&quot;>129</div><div class=&quot;box&quot; id=&quot;colorpalette130&quot; style=&quot;background: #3e857f;&quot;>130</div><div class=&quot;box&quot; id=&quot;colorpalette131&quot; style=&quot;background: #3e7285;&quot;>131</div><div class=&quot;box&quot; id=&quot;colorpalette132&quot; style=&quot;background: #3e4e85;&quot;>132</div><div class=&quot;box&quot; id=&quot;colorpalette133&quot; style=&quot;background: #403e85;&quot;>133</div><div class=&quot;box&quot; id=&quot;colorpalette134&quot; style=&quot;background: #4d3e85;&quot;>134</div><div class=&quot;box&quot; id=&quot;colorpalette135&quot; style=&quot;background: #5c3e85;&quot;>135</div><div class=&quot;box&quot; id=&quot;colorpalette136&quot; style=&quot;background: #693e85;&quot;>136</div><div class=&quot;box&quot; id=&quot;colorpalette137&quot; style=&quot;background: #783e85;&quot;>137</div><div class=&quot;box&quot; id=&quot;colorpalette138&quot; style=&quot;background: #853e70;&quot;>138</div><div class=&quot;box&quot; id=&quot;colorpalette139&quot; style=&quot;background: #853e5a;&quot;>139</div><div class=&quot;box&quot; id=&quot;colorpalette140&quot; style=&quot;background: #b96161;&quot;>140</div><div class=&quot;box&quot; id=&quot;colorpalette141&quot; style=&quot;background: #b97161;&quot;>141</div><div class=&quot;box&quot; id=&quot;colorpalette142&quot; style=&quot;background: #b98261;&quot;>142</div><div class=&quot;box&quot; id=&quot;colorpalette143&quot; style=&quot;background: #b99061;&quot;>143</div><div class=&quot;box&quot; id=&quot;colorpalette144&quot; style=&quot;background: #b9a161;&quot;>144</div><div class=&quot;box&quot; id=&quot;colorpalette145&quot; style=&quot;background: #b9af61;&quot;>145</div><div class=&quot;box&quot; id=&quot;colorpalette146&quot; style=&quot;background: #b8b961;&quot;>146</div><div class=&quot;box&quot; id=&quot;colorpalette147&quot; style=&quot;background: #a8b961;&quot;>147</div><div class=&quot;box&quot; id=&quot;colorpalette148&quot; style=&quot;background: #8fb961;&quot;>148</div><div class=&quot;box&quot; id=&quot;colorpalette149&quot; style=&quot;background: #61b993;&quot;>149</div><div class=&quot;box&quot; id=&quot;colorpalette150&quot; style=&quot;background: #61b9b2;&quot;>150</div><div class=&quot;box&quot; id=&quot;colorpalette151&quot; style=&quot;background: #61a2b9;&quot;>151</div><div class=&quot;box&quot; id=&quot;colorpalette152&quot; style=&quot;background: #6175b9;&quot;>152</div><div class=&quot;box&quot; id=&quot;colorpalette153&quot; style=&quot;background: #6461b9;&quot;>153</div><div class=&quot;box&quot; id=&quot;colorpalette154&quot; style=&quot;background: #7461b9;&quot;>154</div><div class=&quot;box&quot; id=&quot;colorpalette155&quot; style=&quot;background: #8761b9;&quot;>155</div><div class=&quot;box&quot; id=&quot;colorpalette156&quot; style=&quot;background: #9761b9;&quot;>156</div><div class=&quot;box&quot; id=&quot;colorpalette157&quot; style=&quot;background: #a961b9;&quot;>157</div><div class=&quot;box&quot; id=&quot;colorpalette158&quot; style=&quot;background: #b9619f;&quot;>158</div><div class=&quot;box&quot; id=&quot;colorpalette159&quot; style=&quot;background: #b96184;&quot;>159</div><div class=&quot;box&quot; id=&quot;colorpalette160&quot; style=&quot;background: #de9e9e;&quot;>160</div><div class=&quot;box&quot; id=&quot;colorpalette161&quot; style=&quot;background: #dea99e;&quot;>161</div><div class=&quot;box&quot; id=&quot;colorpalette162&quot; style=&quot;background: #deb59e;&quot;>162</div><div class=&quot;box&quot; id=&quot;colorpalette163&quot; style=&quot;background: #debf9e;&quot;>163</div><div class=&quot;box&quot; id=&quot;colorpalette164&quot; style=&quot;background: #decc9e;&quot;>164</div><div class=&quot;box&quot; id=&quot;colorpalette165&quot; style=&quot;background: #ded69e;&quot;>165</div><div class=&quot;box&quot; id=&quot;colorpalette166&quot; style=&quot;background: #dcde9e;&quot;>166</div><div class=&quot;box&quot; id=&quot;colorpalette167&quot; style=&quot;background: #d1de9e;&quot;>167</div><div class=&quot;box&quot; id=&quot;colorpalette168&quot; style=&quot;background: #bfde9e;&quot;>168</div><div class=&quot;box&quot; id=&quot;colorpalette169&quot; style=&quot;background: #9edec2;&quot;>169</div><div class=&quot;box&quot; id=&quot;colorpalette170&quot; style=&quot;background: #9eded9;&quot;>170</div><div class=&quot;box&quot; id=&quot;colorpalette171&quot; style=&quot;background: #9ecdde;&quot;>171</div><div class=&quot;box&quot; id=&quot;colorpalette172&quot; style=&quot;background: #9eacde;&quot;>172</div><div class=&quot;box&quot; id=&quot;colorpalette173&quot; style=&quot;background: #9f9ede;&quot;>173</div><div class=&quot;box&quot; id=&quot;colorpalette174&quot; style=&quot;background: #ab9ede;&quot;>174</div><div class=&quot;box&quot; id=&quot;colorpalette175&quot; style=&quot;background: #b99ede;&quot;>175</div><div class=&quot;box&quot; id=&quot;colorpalette176&quot; style=&quot;background: #c49ede;&quot;>176</div><div class=&quot;box&quot; id=&quot;colorpalette177&quot; style=&quot;background: #d29ede;&quot;>177</div><div class=&quot;box&quot; id=&quot;colorpalette178&quot; style=&quot;background: #de9ecb;&quot;>178</div><div class=&quot;box&quot; id=&quot;colorpalette179&quot; style=&quot;background: #de9eb7;&quot;>179</div><div class=&quot;box&quot; id=&quot;colorpalette180&quot; style=&quot;background: #705555;&quot;>180</div><div class=&quot;box&quot; id=&quot;colorpalette181&quot; style=&quot;background: #705a55;&quot;>181</div><div class=&quot;box&quot; id=&quot;colorpalette182&quot; style=&quot;background: #706155;&quot;>182</div><div class=&quot;box&quot; id=&quot;colorpalette183&quot; style=&quot;background: #706355;&quot;>183</div><div class=&quot;box&quot; id=&quot;colorpalette184&quot; style=&quot;background: #706955;&quot;>184</div><div class=&quot;box&quot; id=&quot;colorpalette185&quot; style=&quot;background: #706e55;&quot;>185</div><div class=&quot;box&quot; id=&quot;colorpalette186&quot; style=&quot;background: #707055;&quot;>186</div><div class=&quot;box&quot; id=&quot;colorpalette187&quot; style=&quot;background: #6b7055;&quot;>187</div><div class=&quot;box&quot; id=&quot;colorpalette188&quot; style=&quot;background: #637055;&quot;>188</div><div class=&quot;box&quot; id=&quot;colorpalette189&quot; style=&quot;background: #557065;&quot;>189</div><div class=&quot;box&quot; id=&quot;colorpalette190&quot; style=&quot;background: #55706f;&quot;>190</div><div class=&quot;box&quot; id=&quot;colorpalette191&quot; style=&quot;background: #556970;&quot;>191</div><div class=&quot;box&quot; id=&quot;colorpalette192&quot; style=&quot;background: #555b70;&quot;>192</div><div class=&quot;box&quot; id=&quot;colorpalette193&quot; style=&quot;background: #565570;&quot;>193</div><div class=&quot;box&quot; id=&quot;colorpalette194&quot; style=&quot;background: #5b5570;&quot;>194</div><div class=&quot;box&quot; id=&quot;colorpalette195&quot; style=&quot;background: #615570;&quot;>195</div><div class=&quot;box&quot; id=&quot;colorpalette196&quot; style=&quot;background: #655570;&quot;>196</div><div class=&quot;box&quot; id=&quot;colorpalette197&quot; style=&quot;background: #6b5570;&quot;>197</div><div class=&quot;box&quot; id=&quot;colorpalette198&quot; style=&quot;background: #705569;&quot;>198</div><div class=&quot;box&quot; id=&quot;colorpalette199&quot; style=&quot;background: #705561;&quot;>199</div><div class=&quot;box&quot; id=&quot;colorpalette200&quot; style=&quot;background: #a07e7e;&quot;>200</div><div class=&quot;box&quot; id=&quot;colorpalette201&quot; style=&quot;background: #a0847e;&quot;>201</div><div class=&quot;box&quot; id=&quot;colorpalette202&quot; style=&quot;background: #a08c7e;&quot;>202</div><div class=&quot;box&quot; id=&quot;colorpalette203&quot; style=&quot;background: #a0907e;&quot;>203</div><div class=&quot;box&quot; id=&quot;colorpalette204&quot; style=&quot;background: #a0977e;&quot;>204</div><div class=&quot;box&quot; id=&quot;colorpalette205&quot; style=&quot;background: #a09c7e;&quot;>205</div><div class=&quot;box&quot; id=&quot;colorpalette206&quot; style=&quot;background: #a0a07e;&quot;>206</div><div class=&quot;box&quot; id=&quot;colorpalette207&quot; style=&quot;background: #99a07e;&quot;>207</div><div class=&quot;box&quot; id=&quot;colorpalette208&quot; style=&quot;background: #90a07e;&quot;>208</div><div class=&quot;box&quot; id=&quot;colorpalette209&quot; style=&quot;background: #7ea092;&quot;>209</div><div class=&quot;box&quot; id=&quot;colorpalette210&quot; style=&quot;background: #7ea09e;&quot;>210</div><div class=&quot;box&quot; id=&quot;colorpalette211&quot; style=&quot;background: #7e97a0;&quot;>211</div><div class=&quot;box&quot; id=&quot;colorpalette212&quot; style=&quot;background: #7e86a0;&quot;>212</div><div class=&quot;box&quot; id=&quot;colorpalette213&quot; style=&quot;background: #7f7ea0;&quot;>213</div><div class=&quot;box&quot; id=&quot;colorpalette214&quot; style=&quot;background: #857ea0;&quot;>214</div><div class=&quot;box&quot; id=&quot;colorpalette215&quot; style=&quot;background: #8d7ea0;&quot;>215</div><div class=&quot;box&quot; id=&quot;colorpalette216&quot; style=&quot;background: #937ea0;&quot;>216</div><div class=&quot;box&quot; id=&quot;colorpalette217&quot; style=&quot;background: #997ea0;&quot;>217</div><div class=&quot;box&quot; id=&quot;colorpalette218&quot; style=&quot;background: #a07e96;&quot;>218</div><div class=&quot;box&quot; id=&quot;colorpalette219&quot; style=&quot;background: #a07e8c;&quot;>219</div><div class=&quot;box&quot; id=&quot;colorpalette220&quot; style=&quot;background: #cbb2b2;&quot;>220</div><div class=&quot;box&quot; id=&quot;colorpalette221&quot; style=&quot;background: #cbb7b2;&quot;>221</div><div class=&quot;box&quot; id=&quot;colorpalette222&quot; style=&quot;background: #cbbcb2;&quot;>222</div><div class=&quot;box&quot; id=&quot;colorpalette223&quot; style=&quot;background: #cbbeb2;&quot;>223</div><div class=&quot;box&quot; id=&quot;colorpalette224&quot; style=&quot;background: #cbc3b2;&quot;>224</div><div class=&quot;box&quot; id=&quot;colorpalette225&quot; style=&quot;background: #cbc7b2;&quot;>225</div><div class=&quot;box&quot; id=&quot;colorpalette226&quot; style=&quot;background: #cbcbb2;&quot;>226</div><div class=&quot;box&quot; id=&quot;colorpalette227&quot; style=&quot;background: #c6cbb2;&quot;>227</div><div class=&quot;box&quot; id=&quot;colorpalette228&quot; style=&quot;background: #becbb2;&quot;>228</div><div class=&quot;box&quot; id=&quot;colorpalette229&quot; style=&quot;background: #b2cbc1;&quot;>229</div><div class=&quot;box&quot; id=&quot;colorpalette230&quot; style=&quot;background: #b2cbc8;&quot;>230</div><div class=&quot;box&quot; id=&quot;colorpalette231&quot; style=&quot;background: #b2c3cb;&quot;>231</div><div class=&quot;box&quot; id=&quot;colorpalette232&quot; style=&quot;background: #b2b8cb;&quot;>232</div><div class=&quot;box&quot; id=&quot;colorpalette233&quot; style=&quot;background: #b3b2cb;&quot;>233</div><div class=&quot;box&quot; id=&quot;colorpalette234&quot; style=&quot;background: #b7b2cb;&quot;>234</div><div class=&quot;box&quot; id=&quot;colorpalette235&quot; style=&quot;background: #bdb2cb;&quot;>235</div><div class=&quot;box&quot; id=&quot;colorpalette236&quot; style=&quot;background: #c1b2cb;&quot;>236</div><div class=&quot;box&quot; id=&quot;colorpalette237&quot; style=&quot;background: #c6b2cb;&quot;>237</div><div class=&quot;box&quot; id=&quot;colorpalette238&quot; style=&quot;background: #cbb2c3;&quot;>238</div><div class=&quot;box&quot; id=&quot;colorpalette239&quot; style=&quot;background: #cbb2bc;&quot;>239</div><div class=&quot;box&quot; id=&quot;colorpalette240&quot; style=&quot;background: #d34242;&quot;>240</div><div class=&quot;box&quot; id=&quot;colorpalette241&quot; style=&quot;background: #d57740;&quot;>241</div><div class=&quot;box&quot; id=&quot;colorpalette242&quot; style=&quot;background: #e9ce2c;&quot;>242</div><div class=&quot;box&quot; id=&quot;colorpalette243&quot; style=&quot;background: #75c054;&quot;>243</div><div class=&quot;box&quot; id=&quot;colorpalette244&quot; style=&quot;background: #4bc993;&quot;>244</div><div class=&quot;box&quot; id=&quot;colorpalette245&quot; style=&quot;background: #62b4cc;&quot;>245</div><div class=&quot;box&quot; id=&quot;colorpalette246&quot; style=&quot;background: #4264d3;&quot;>246</div><div class=&quot;box&quot; id=&quot;colorpalette247&quot; style=&quot;background: #7b60da;&quot;>247</div><div class=&quot;box&quot; id=&quot;colorpalette248&quot; style=&quot;background: #ae54c1;&quot;>248</div><div class=&quot;box&quot; id=&quot;colorpalette249&quot; style=&quot;background: #0b180b;&quot;>249</div><div class=&quot;box&quot; id=&quot;colorpalette250&quot; style=&quot;background: #0e1812;&quot;>250</div><div class=&quot;box&quot; id=&quot;colorpalette251&quot; style=&quot;background: #0d1717;&quot;>251</div><div class=&quot;box&quot; id=&quot;colorpalette252&quot; style=&quot;background: #0d0e15;&quot;>252</div><div class=&quot;box&quot; id=&quot;colorpalette253&quot; style=&quot;background: #110c15;&quot;>253</div><div class=&quot;box&quot; id=&quot;colorpalette254&quot; style=&quot;background: #000000;&quot;>254</div><div class=&quot;box&quot; id=&quot;colorpalette255&quot; style=&quot;background: #ffffff;&quot;>255</div></div>
+</div>
+<br>
+<div id=&quot;scroll&quot;>
+    <canvas width=&quot;250&quot; height=&quot;250&quot; id=&quot;canvas&quot;></canvas>
+
+    <ul id=&quot;history&quot;>
+    </ul>
+</div>
+<script src=&quot;//code.jquery.com/jquery-1.11.1.js&quot;></script>
+<script src=&quot;//code.jquery.com/ui/1.12.1/jquery-ui.min.js&quot;></script>
+<script>
+    var obj;
+    var print;
+    var c, ctx;
+    var id, idBack;
+    var blob;
+    var barray;
+    var view, view2;
+    var reader=new FileReader();
+    var _bmin = {};
+    var _bmax = {};
+    var _anchorPoint = {};
+    var theLayer = 1;
+    var _layers = [];
+    var _blendColor = rgbaTo32({r: 0, g: 0, b: 0, a: 0});
+    var gamePalette;
+    var avatarPalette1;
+    var avatarPalette2;
+    var dv;
+    var colors = [];
+    var allColors = [];
+    var lastUrl = -1;
+    var layering = false;
+
+    cs = {};
+    _layers[theLayer] = {
+        &quot;c&quot;:-1,
+        &quot;lastColor&quot;:-1,
+        &quot;blendColor&quot;:0
+    };
+    $(&quot;#animate&quot;).on('click', function () {
+        animating = ! animating;
+        tick(0);
+    })
+    $(&quot;#colorLayerPicker&quot;).append(&quot;<option>&quot; + theLayer + &quot;</option>&quot;);
+    c = document.getElementById('canvas');
+    var oReq = new XMLHttpRequest();
+    oReq.open(&quot;GET&quot;, &quot;https://cdn.glitch.global/c02d6c08-daad-4d72-a774-d6a8dda99061/globalPalette?v=1707411396044&quot;, true);
+    oReq.responseType=&quot;blob&quot;;
+    oReq.send();
+    oReq.onload = function(oE) {
+        blob=oReq.response;
+        reader.addEventListener(&quot;loadend&quot;, function () {
+            barray = reader.result;
+            dv = new DataView(barray);
+            setGamePalette(dv);
+        });
+        reader.readAsArrayBuffer(blob);
+    }
+    var lastColor = -1;
+    $(&quot;#colorLayerPicker&quot;).on('change', function () {
+        theLayer = $(&quot;#colorLayerPicker&quot;).val();
+        color = _layers[theLayer].c;
+        lastColor = color;
+        updateSliderVals();
+    });
+    var maxLayer = theLayer;
+    $(&quot;#quickGo&quot;).on('click', function () {
+        var quickList = $(&quot;#quickIn&quot;).val().split(&quot;\n&quot;);
+        _layers = [];
+        theLayer = 1;
+        maxLayer = theLayer;
+        for (var i = 0; i < quickList.length; i++) {
+            if (i > 0) {
+                maxLayer++;
+                theLayer = maxLayer;
+            }
+            var line = quickList[i];
+            var parts = line.split(&quot;|&quot;);
+            $(&quot;#colorLayerPicker&quot;).append(&quot;<option>&quot; + theLayer + &quot;</option>&quot;);
+            _layers[theLayer] = {
+                &quot;c&quot;: parts[3],
+                &quot;l&quot;: theLayer,
+                &quot;lastColor&quot;:-1,
+                &quot;blendColor&quot;:0,
+                &quot;avtId&quot;: parts[0],
+                &quot;catId&quot;: parts[1],
+                &quot;accLa&quot;: parts[2]
+            }
+        }
+        getLayers();
+    });
+    function getLayers() {
+        for (i in _layers) {
+            var avatarId = _layers[i].avtId;
+            var categoryId = _layers[i].catId;
+            var layerId = _layers[i].accLa;
+            var color = _layers[i].c;
+            var l = _layers[i].l;
+            let url = '/iconLayer/' + avatarId + '-' + categoryId + '-' + layerId;
+            let myL = l;
+            let myColor = color;
+            $.getJSON(url, function (d) {
+                setLayer(myL, d, myColor);
+            })
+                .fail(function (e) {
+                    error(&quot;Failed. Might not exist&quot;);
+                    console.log(e);
+                });
+        }
+        setTimeout(function () { paint(0) }, 300);
+    }
+    $(&quot;#printAnimation&quot;).on('click', function () {
+      animating = false;
+      print = 1;
+      frame = 0;
+      animating = true;
+      tick(0);
+    });
+    $(&quot;#tutorial&quot;).on('click', function () {
+      window.open('https://www.youtube.com/watch?v=46RaOdIavrc', '_blank');
+    });
+    $(&quot;#discord&quot;).on('click', function () {
+      window.open('https://discord.gg/ZaqYGm7YbN', '_blank');
+    });
+    $(&quot;#credits&quot;).on('click', function () {
+      window.open('credits.html', '_blank');
+    });
+    $(&quot;form&quot;).on('submit', function () {
+        print = 0;
+        error(&quot;&quot;);
+        var f = $(this);
+        var layerId = $(&quot;input[name='layerId']&quot;, f).val();
+        var categoryId = $(&quot;input[name='categoryId']&quot;, f).val();
+        var avatarId = $(&quot;input[name='avatarId']&quot;, f).val();
+        var color = $(&quot;input[name='color']&quot;, f).val();
+        var layering = $(&quot;input[name='layering']&quot;, f).get(0).checked;
+        if (layering) {
+            maxLayer+=1;
+            theLayer = maxLayer;
+            $(&quot;#layering&quot;).attr(&quot;checked&quot;, false);
+            $(&quot;#colorLayerPicker&quot;).append(&quot;<option>&quot; + theLayer + &quot;</option>&quot;);
+            _layers[theLayer] = {
+                &quot;c&quot;:-1,
+                &quot;lastColor&quot;:-1,
+                &quot;blendColor&quot;:0
+            }
+        };
+
+        if (color.match(/,/)) {
+            colors = color.split(&quot;,&quot;);
+        } else if (color == &quot;&quot;) {
+            colors = allColors;
+        } else {
+            colors = [color];
+        }
+        color = colors[parseInt((colors.length) * Math.random())];
+        /*
+        if (colors.length > 1 &amp;&amp; color == lastColor) {
+          error(&quot;same color as last time&quot;);
+          $(this).submit;
+          return false;
+        }
+        */
+        lastColor = color;
+        $(&quot;#color&quot;).html(color);
+        updateSliderVals();
+        let url = '/iconLayer/' + avatarId + '-' + categoryId + '-' + layerId;
+        if (lastUrl !== -1) {
+            copyToHistory([avatarId, categoryId, layerId, color, $(&quot;#autocomplete&quot;).val()]);
+        }
+        if (url != lastUrl) {
+            $.getJSON(url, function (d) {
+                updateSliderVals();
+                setLayer(theLayer, d, color);
+                paint(0);
+                lastUrl = url;
+            })
+                .fail(function (e) {
+                    error(&quot;Failed. Might not exist&quot;);
+                    console.log(e);
+                });
+        } else {
+            setLayerColor(theLayer, color);
+            paint(0);
+            updateSliderVals();
+        }
+        updateSliderVals();
+        return false;
+    });
+    function updateSliderVals() {
+        c1 = lastColor >>> 24 &amp; 255;
+        c2 = lastColor >>> 16 &amp; 255;
+        c3 = lastColor >>> 8 &amp; 255;
+        c4 = lastColor &amp; 255;
+        $(&quot;#c1&quot;).val(c1);
+        document.getElementById(&quot;c1&quot;).style.background = palette[c1]
+        if (c1 == 100 || c1 == 105 || c1 == 255) {
+            document.getElementById(&quot;c1&quot;).style.color = &quot;black&quot;;
+        } else {
+            document.getElementById(&quot;c1&quot;).style.color = &quot;white&quot;;
+        }
+        $(&quot;#c2&quot;).val(c2);
+        document.getElementById(&quot;c2&quot;).style.background = palette[c2]
+        if (c2 == 100 || c2 == 105 || c2 == 255) {
+            document.getElementById(&quot;c2&quot;).style.color = &quot;black&quot;;
+        } else {
+            document.getElementById(&quot;c2&quot;).style.color = &quot;white&quot;;
+        }
+        $(&quot;#c3&quot;).val(c3);
+        document.getElementById(&quot;c3&quot;).style.background = palette[c3]
+        if (c3 == 100 || c3 == 105 || c3 == 255) {
+            document.getElementById(&quot;c3&quot;).style.color = &quot;black&quot;;
+        } else {
+            document.getElementById(&quot;c3&quot;).style.color = &quot;white&quot;;
+        }
+        $(&quot;#c4&quot;).val(c4);
+        document.getElementById(&quot;c4&quot;).style.background = palette[c4]
+        if (c4 == 100 || c4 == 105 || c4 == 255) {
+            document.getElementById(&quot;c4&quot;).style.color = &quot;black&quot;;
+        } else {
+            document.getElementById(&quot;c4&quot;).style.color = &quot;white&quot;;
+        }
+    }
+    $(&quot;.cSlider&quot;).on('change', function () {
+        color = $(&quot;#c1&quot;).val() << 24 | $(&quot;#c2&quot;).val() << 16 | $(&quot;#c3&quot;).val() << 8 | $(&quot;#c4&quot;).val();
+        lastColor = color;
+        updateSliderVals();
+        $(&quot;#color&quot;).html(color);
+        setLayerColor(theLayer, color);
+        paint(0);
+    });
+    function error(str) {
+        $(&quot;#color&quot;).html(&quot;<b>&quot; + str + &quot;</b>&quot;);
+    }
+    function copyToHistory(p) {
+        var dataUrl = c.toDataURL() //+ &quot;#n=&quot; + p.join(&quot;-&quot;) + &quot;.png&quot;;
+        var img = new Image;
+        img.width = c.width;
+        img.height = c.height;
+        img.src = dataUrl;
+        var a = document.createElement(&quot;a&quot;);
+        a.href = dataUrl;
+        a.download = p.join(&quot;-&quot;);
+        a.appendChild(img);
+        $(&quot;#history&quot;).prepend(a);
+    }
+    var lastTick = 0;
+    var lastFrame = -1;
+    var frame = 0;
+    var animating = false;
+    function tick(t) {
+        msPerTick = 1/15 * 1000;
+        if (lastTick == 0) { lastTick = t};
+        if (t - lastTick >= msPerTick  &amp;&amp; animating &amp;&amp; _layers[theLayer].o !== undefined) {
+          if (print==1) {
+            var canvasData = canvas.toDataURL('image/png');
+            var link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = 'frame' + frame + '.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          }
+
+            frame++;
+            if (frame > _layers[theLayer].o.f.length - 1) {
+              if(print==1) {
+                print = 0;
+                animating = false;
+              }
+              frame = 0;
+            }
+            paint(frame);
+            lastTick = t;
+        }
+
+        window.requestAnimationFrame(tick);
+    }
+    function paint(param1, param2 = false, param3 = true) {
+        var _loc4_ = null;
+        var _loc5_ = false;
+        var _loc6_ = 0;
+        calcBounds(param1);
+        ctx = c.getContext('2d');
+        id = ctx.getImageData(0,0,c.width, c.height);
+        idBack = ctx.getImageData(0,0,c.width, c.height);
+        if(param3 &amp;&amp; _layers[0] != null) {
+            _loc4_ = _layers[0];
+            param1 = _loc4_.o.f[param1];
+        }
+        if( true) {
+            refreshAllPalettes();
+            _lastFrame = param1;
+            _lastHFlip = param2;
+
+            _loc6_ = 1;
+            while(_loc6_ < _layers.length)
+            {
+                _loc4_ = _layers[_loc6_];
+                if(_loc4_ != null)
+                {
+                    if (_loc4_.o == undefined) {
+                        setTimeout(function () {
+                            paint(param1, param2, param3);
+                        }, 100);
+                        return;
+                    }
+                    paintFrame(_loc4_.o,param1,_loc4_.pal,param2);
+                }
+                _loc6_++;
+            }
+            _loc5_ = true;
+            if(param2)
+            {
+                _anchorPoint.x = 500 - _bmax.x;
+            }
+        }
+        return _loc5_;
+    }
+    function setLayerColor(param1, param2) {
+        var _loc3_ = _layers[param1];
+        if(_loc3_ &amp;&amp; param2 != _loc3_.c)
+        {
+            _loc3_.c = param2;
+            _bColorChanged = true;
+        }
+    }
+    function paintFrame(param1, param2, param3, param4) {
+        if (param2 >= param1.f.length) { return }
+        var _loc18_ = param1.f[param2];
+        if (!_loc18_) { return; }
+        var _loc10_ = _loc18_.b.data;
+        _loc10_.readUnsignedByte = function() { return this[this.position++]; }
+        _loc10_.position = 0;
+        var _loc6_ = 0;
+        var _loc8_ = _loc18_.x;
+        var _loc7_ = _loc18_.y;
+        var _loc21_ = _loc18_.w;
+        var _loc20_ = _loc18_.h;
+        _loc8_ = _loc8_ - _bmin.x;
+        _loc7_ = _loc7_ - _bmin.y;
+        _loc21_ = _loc21_ + _loc8_;
+        var _loc16_ = _loc10_.length;
+        var _loc31_ = _loc8_;
+        var _loc30_ = _loc7_;
+        var _loc19_ = _loc21_ - _loc8_;
+        var width = id.width;
+        _loc31_ = _loc8_;
+        _loc30_ = _loc7_;
+        while (_loc10_.position < _loc16_) {
+            _loc24_ = _loc10_.readUnsignedByte();
+            _loc6_ = 1; 
+            if ((_loc24_ &amp; 128) == 128) {
+                _loc24_ = _loc24_ &amp; 127;
+                _loc6_ = _loc10_.readUnsignedByte() + 1;
+            }
+            if (_loc24_ == 0) {
+                _loc31_ = int(_loc31_ + _loc6_);
+                if (_loc31_ >= _loc21_) {
+                    _loc6_ = _loc31_ - _loc21_;
+                    _loc31_ = int(_loc8_ + _loc6_ % _loc19_);
+                    _loc30_ = int(_loc30_ + (_loc6_ / _loc19_ + 1));
+                }
+            } else {
+                _loc17_ = param3[_loc24_] >>> 0;
+                if (Math.random * 100 > 99) {
+                }
+                if (cs[_loc24_] === undefined) { cs[_loc24_] = 0;}
+                cs[_loc24_] += 1;
+                if (_loc17_ === undefined) {
+                    console.log(&quot;bad pallet lookup:&quot;, _loc24_);
+                }
+
+                if (_loc17_ >= 4278190080) {
+                    while(true)
+                    {
+                        _loc6_--;
+                        if(_loc6_ <= -1)
+                        {
+                            break;
+                        }
+                        _loc31_++;
+                        setPixel32(_loc31_,_loc30_,_loc17_, false);
+                        if(_loc31_ == _loc21_)
+                        {
+                            _loc31_ = _loc8_;
+                            _loc30_++;
+                        }
+                    }
+                } else {
+                    while(true) {
+                        _loc6_--;
+                        if (_loc6_ <= -1) { break; }
+                        _loc15_ = uint(getPixel32(_loc31_,_loc30_));
+                        if(_loc15_ != 0) {
+                            _loc13_ = _loc17_ >>> 24 &amp; 255;
+                            _loc27_ = _loc17_ >>> 16 &amp; 255;
+                            _loc26_ = _loc17_ >>> 8 &amp; 255;
+                            _loc12_ = _loc17_ &amp; 255;
+                            _loc14_ = _loc15_ >>> 24 &amp; 255;
+                            _loc29_ = _loc15_ >>> 16 &amp; 255;
+                            _loc25_ = _loc15_ >>> 8 &amp; 255;
+                            _loc9_ = _loc15_ &amp; 255;
+                            if(_loc13_ == 192) {
+                                _loc27_ = int((_loc27_ + _loc27_ + _loc27_ + _loc29_) * 0.25);
+                                _loc26_ = int((_loc26_ + _loc26_ + _loc26_ + _loc25_) * 0.25);
+                                _loc12_ = int((_loc12_ + _loc12_ + _loc12_ + _loc9_) * 0.25);
+                            }
+                            else if(_loc13_ == 128) {
+                                _loc27_ = int((_loc27_ + _loc29_) * 0.5);
+                                _loc26_ = int((_loc26_ + _loc25_) * 0.5);
+                                _loc12_ = int((_loc12_ + _loc9_) * 0.5);
+                            } else {
+                                _loc27_ = int((_loc27_ + _loc29_ + _loc29_ + _loc29_) * 0.25);
+                                _loc26_ = int((_loc26_ + _loc25_ + _loc25_ + _loc25_) * 0.25);
+                                _loc12_ = int((_loc12_ + _loc9_ + _loc9_ + _loc9_) * 0.25);
+                            }
+                            if(_loc14_ > _loc13_) {
+                                _loc13_ = _loc14_;
+                            }
+                            _loc17_ = uint(_loc13_ << 24 | _loc27_ << 16 | _loc26_ << 8 | _loc12_);
+
+                        }
+
+
+                        _loc31_++;
+
+                        setPixel32(_loc31_, _loc30_, _loc17_, false);
+
+
+                        if (_loc31_ == _loc21_) {
+                            _loc31_ = _loc8_;
+                            _loc30_+=1;
+
+                        }
+                    }
+                }
+            }
+        }
+        if (_loc18_.hasOwnProperty(&quot;s&quot;)) {
+            ctx.putImageData(id, 0, 0);
+            id = ctx.getImageData(0,0,c.width, c.height);
+            _loc28_ = _loc18_.sm;
+            _loc10_ = _loc18_.s.data;
+            _loc16_ = _loc10_.length;
+            _loc10_.readUnsignedByte = function() { return this[this.position++]; }
+            _loc10_.position = 0;
+            _loc31_ = _loc8_;
+            _loc30_ = _loc7_;
+            if (! param4) {
+                while(_loc10_.position < _loc16_) {
+                    _loc24_ = int(_loc10_.readUnsignedByte());
+                    _loc6_ = 1;
+                    if((_loc24_ &amp; 128) == 128) {
+                        _loc24_ = _loc24_ &amp; 127;
+                        _loc6_ = _loc10_.readUnsignedByte() + 1;
+                    }
+                    if(_loc24_ == 0) {
+                        _loc31_ = int(_loc31_ + _loc6_);
+                        if(_loc31_ >= _loc21_) {
+                            _loc6_ = _loc31_ - _loc21_;
+                            _loc31_ = int(_loc8_ + _loc6_ % _loc19_);
+                            _loc30_ = int(_loc30_ + (_loc6_ / _loc19_ + 1));
+                        }
+                    } else {
+                        _loc17_ = uint(_loc24_ << _loc28_);
+                        _loc17_ = uint(_loc17_ + 24);
+                        if(_loc17_ > 255) {
+                            _loc5_ = 1;
+                        } else {
+                            _loc5_ = Number(_loc17_ / 255);
+                        }
+                        while(true) {
+                            _loc6_--;
+                            if(_loc6_ <= -1) { break; }
+                            _loc15_ = uint(getPixel32(_loc31_,_loc30_));
+                            if(_loc15_ != 0) {
+                                _loc13_ = (_loc15_ >>> 24 &amp; 255);
+                                if (_loc13_ == 0) {  _loc13_ = 255; }
+                                _loc27_ = int((_loc15_ >>> 16 &amp; 255) * _loc5_);
+                                _loc26_ = int((_loc15_ >>> 8 &amp; 255) * _loc5_);
+                                _loc12_ = int((_loc15_ &amp; 255) * _loc5_);
+                                _loc23_ = int(_loc13_ << 24 | _loc27_ << 16 | _loc26_ << 8 | _loc12_);
+
+                                setPixel32(_loc31_,_loc30_,_loc23_, false);
+
+                            }
+                            _loc31_++;
+                            if(_loc31_ == _loc21_) {
+                                _loc31_ = _loc8_;
+                                _loc30_++;
+                            }
+                        }
+                    }
+                }
+            } else {
+                console.log(&quot;NEED TO IMPLEMENT&quot;)
+            }
+        }
+        ctx.putImageData(id, 0, 0);
+    }
+    function setPixel32(x, y, color, refresh=false) {
+
+        var offset = ((y * id.width) + x) * 4;
+
+        var a = color >>> 24 &amp; 255;
+        var r = color >>> 16 &amp; 255;
+        var g = color >>> 8 &amp; 255;
+        var b = color &amp; 255;
+
+        id.data[offset]   = r;
+        id.data[offset+1] = g;
+        id.data[offset+2] = b;
+        id.data[offset+3] = a;
+        if (refresh) {
+            ctx.putImageData(id, 0, 0);
+        }
+    }
+    function getPixel32(x, y) {
+        offset = ((y * id.width) + x) * 4;
+        [r, g, b, a] = id.data.slice(offset, offset+4);
+        return (a << 24 | r << 16 | g << 8 | b);
+
+    }
+    int = parseInt;
+    function uint(n) { return n >>> 0; }
+    function calcBounds(param1) {
+        var _loc10_ = 0;
+        var _loc7_ = null;
+        var _loc6_ = null;
+        var _loc3_ = 0;
+        var _loc8_ = null;
+        var _loc5_ = 0;
+        var _loc4_ = 0;
+        var _loc2_ = 0;
+        var _loc9_ = 0;
+        _bmin.x = 1000;
+        _bmin.y = 1000;
+        _bmax.x = 0;
+        _bmax.y = 0;
+        _loc10_ = 1;
+        while(_loc10_ < _layers.length) {
+            _loc7_ = _layers[_loc10_];
+            if(_loc7_ !== undefined &amp;&amp; _loc7_ != null &amp;&amp; _loc7_.o !== undefined) {
+                _loc6_ = _loc7_.o;
+
+                if(_loc6_.v != 117967104) { console.log(&quot;invalid version&quot;); return; }
+                _loc3_ = _loc6_.f.length;
+
+                if(param1 < _loc3_) {
+                    _loc8_ = _loc6_.f[param1];
+
+                    if(_loc8_) {
+                        _loc5_ = _loc8_.x;
+                        _loc4_ = _loc8_.y;
+                        _loc2_ = _loc8_.w;
+                        _loc9_ = _loc8_.h;
+                        if(_loc5_ < _bmin.x) {
+                            _bmin.x = _loc5_;
+                        }
+                        if(_loc4_ < _bmin.y) {
+                            _bmin.y = _loc4_;
+                        }
+                        if(_loc5_ + _loc2_ > _bmax.x) {
+                            _bmax.x = _loc5_ + _loc2_;
+                        }
+                        if(_loc4_ + _loc9_ > _bmax.y) {
+                            _bmax.y = _loc4_ + _loc9_;
+                        }
+                    }
+                }
+            }
+            _loc10_++;
+        }
+        if(_bmin.x == 1000 || _bmin.y == 1000) { return; }
+        resizeBitmap(1 + _bmax.x - _bmin.x,1 + _bmax.y - _bmin.y,true);
+        _anchorPoint.x = _bmin.x;
+        _anchorPoint.y = _bmin.y;
+    }
+    function resizeBitmap(w, h, yesno) {
+        c.width = w;
+        c.height = h;
+
+    }
+    function setColorGradient(param1, param2, param3, param4) {
+        var _loc9_ = 0;
+        var _loc8_ = 0;
+        var _loc10_ = param2 >>> 16 &amp; 255;
+        var _loc5_ = param2 >>> 8 &amp; 255;
+        var _loc7_ = param2 &amp; 255;
+        var _loc13_ = _loc10_ / (param4 + 2);
+        var _loc12_ = _loc5_ / (param4 + 2);
+        var _loc11_ = _loc7_ / (param4 + 2);
+        var _loc6_ = param3 + param4 - 1;
+        _loc9_ = uint(0);
+        while(_loc9_ < param4)
+        {
+            _loc8_ = uint(_loc10_ << 16 | _loc5_ << 8 | _loc7_);
+            param1[_loc6_] = _loc8_ | -16777216;
+            param1[_loc6_ + 25] = _loc8_ | -1073741824;
+            param1[_loc6_ + 25 * 2] = _loc8_ | -2147483648;
+            param1[_loc6_ + 25 * 3] = _loc8_ | 1073741824;
+            _loc10_ = _loc10_ - _loc13_;
+            _loc5_ = _loc5_ - _loc12_;
+            _loc7_ = _loc7_ - _loc11_;
+            _loc6_--;
+            _loc9_++;
+        }
+    }
+    function BuildAnimalPalette(param1, param2, param3, param4, param5) {
+        setColorGradient(param1,param2,1,3);
+        setColorGradient(param1,param3,4,3);
+        setColorGradient(param1,param4,7,3);
+        setColorGradient(param1,param5,10,3);
+        setColorGradient(param1,mixColors(param2,param3),13,2);
+        setColorGradient(param1,mixColors(param3,param4),15,2);
+        setColorGradient(param1,mixColors(param2,param4),17,2);
+        setColorGradient(param1,mixColors(param2,param5),19,2);
+        setColorGradient(param1,mixColors(param3,param5),21,2);
+        setColorGradient(param1,mixColors(param4,param5),23,2);
+    }
+
+    function adjustPaletteColor(param1, param2) {
+        var _loc13_ = 0;
+        var _loc6_ = 0;
+        var _loc9_ = 0;
+        var _loc11_ = 0;
+        var _loc8_ = 0;
+        var _loc10_ = 0;
+        var _loc7_ = NaN;
+        var _loc4_ = (param2 >>> 24 &amp; 255) / 255;
+        var _loc3_ = param2 >>> 16 &amp; 255;
+        var _loc12_ = param2 >>> 8 &amp; 255;
+        var _loc5_ = param2 &amp; 255;
+        while(_loc13_ < param1.length)
+        {
+            _loc6_ = uint(param1[_loc13_]);
+            _loc9_ = _loc6_ >>> 24 &amp; 255;
+            _loc11_ = _loc6_ >>> 16 &amp; 255;
+            _loc8_ = _loc6_ >>> 8 &amp; 255;
+            _loc10_ = _loc6_ &amp; 255;
+            _loc7_ = _loc3_ - _loc11_;
+            _loc7_ = _loc7_ * _loc4_;
+            _loc11_ = int(_loc11_ + _loc7_);
+            if(_loc11_ < 0)
+            {
+                _loc11_ = 0;
+            }
+            else if(_loc11_ > 255)
+            {
+                _loc11_ = 255;
+            }
+            _loc7_ = _loc12_ - _loc8_;
+            _loc7_ = _loc7_ * _loc4_;
+            _loc8_ = int(_loc8_ + _loc7_);
+            if(_loc8_ < 0)
+            {
+                _loc8_ = 0;
+            }
+            else if(_loc8_ > 255)
+            {
+                _loc8_ = 255;
+            }
+            _loc7_ = _loc5_ - _loc10_;
+            _loc7_ = _loc7_ * _loc4_;
+            _loc10_ = int(_loc10_ + _loc7_);
+            if(_loc10_ < 0)
+            {
+                _loc10_ = 0;
+            }
+            else if(_loc10_ > 255)
+            {
+                _loc10_ = 255;
+            }
+            param1[_loc13_] = uint(_loc9_ << 24 | _loc11_ << 16 | _loc8_ << 8 | _loc10_);
+            _loc13_++;
+        }
+    }
+    function mixColors(param1, param2) {
+        var _loc7_ = param1 >>> 16 &amp; 255;
+        var _loc6_ = param1 >>> 8 &amp; 255;
+        var _loc3_ = param1 &amp; 255;
+        var _loc8_ = param2 >>> 16 &amp; 255;
+        var _loc4_ = param2 >>> 8 &amp; 255;
+        var _loc5_ = param2 &amp; 255;
+        _loc7_ = (_loc7_ + _loc8_) / 2;
+        _loc6_ = (_loc6_ + _loc4_) / 2;
+        _loc3_ = (_loc3_ + _loc5_) / 2;
+        return _loc7_ << 16 | _loc6_ << 8 | _loc3_;
+    }
+    var _globalColor;
+    function refreshAllPalettes() {
+        var _loc1_ = 0;
+        _loc1_ = 1;
+        while(_loc1_ <= 10)
+        {
+            refreshLayerPalette(_loc1_);
+            _loc1_++;
+        }
+        _bColorChanged = false;
+    }
+    function refreshLayerPalette(param1) {
+        var _loc4_ = 0;
+        var _loc9_ = null;
+        var _loc2_ = 0;
+        var _loc3_ = 0;
+        var _loc8_ = 0;
+        var _loc7_ = 0;
+        var _loc5_ = 0;
+        var _loc6_ = _layers[param1];
+        if(_loc6_ &amp;&amp; (_loc6_.lastColor != _loc6_.c || _loc6_.blendColor != _blendColor)) {
+            _loc4_ = uint(_loc6_.c);
+            _loc9_ = gamePalette;
+            _loc2_ = _loc4_ >>> 24 &amp; 255;
+            _loc3_ = _loc4_ >>> 16 &amp; 255;
+            _loc8_ = _loc4_ >>> 8 &amp; 255;
+            _loc7_ = _loc4_ &amp; 255;
+            if (_loc6_.pal === undefined) { _loc6_.pal = []; }
+            BuildAnimalPalette(_loc6_.pal,_loc9_[_loc2_],_loc9_[_loc3_],_loc9_[_loc8_],_loc9_[_loc7_]);
+            _loc5_ = _blendColor >>> 24 &amp; 255;
+            if(param1 != 3) {
+                if(_loc5_ > 0) {
+                    adjustPaletteColor(_loc6_.pal,_blendColor);
+                }
+                _loc6_.blendColor = _blendColor;
+            }
+            _loc6_.lastColor = _loc4_;
+            _lastFrame = -1;
+        }
+    }
+    function setGamePalette(param1, param2 = null, param3 = null) {
+        var _loc4_ = param1.getInt32(0);
+        gamePalette = [];
+        var _loc5_ = 0;
+        for (let i = 1; i <= _loc4_/4; i++) {
+            gamePalette.push(param1.getUint32(i*4));
+        }
+        avatarPalette1 = [];
+        offset = _loc4_ + 4;
+        _loc4_ = param1.getInt32(offset);
+        offset += 4;
+        for (let i = 0; i < _loc4_; i++) {
+            avatarPalette1.push(param1.getUint8(offset+i));
+        }
+        avatarPalette2 = [];
+        offset = offset + _loc4_;
+        _loc4_ = param1.getInt32(offset);
+        offset += 4;
+        for (let i = 0; i < _loc4_; i++) {
+            avatarPalette2.push(param1.getUint8(offset+i));
+        }
+    }
+    function setLayer(param1, param2, param3) {
+        if(param1 < 0 || param1 > 10) { return; }
+        if(param2)
+        {
+            if(_layers[param1] == null)
+            {
+                _layers[param1] = {
+                    &quot;c&quot;:-1,
+                    &quot;lastColor&quot;:-1,
+                    &quot;blendColor&quot;:0
+                };
+            }
+            _layers[param1].o = param2;
+        }
+        else
+        {
+            _layers[param1] = null;
+        }
+        setLayerColor(param1,param3);
+        _lastFrame = -1;
+    }
+
+    function setLayerColor(param1, param2)  {
+        var _loc3_ = _layers[param1];
+        if(_loc3_ &amp;&amp; param2 != _loc3_.c)
+        {
+            _loc3_.c = param2;
+            _bColorChanged = true;
+        }
+    }
+    function rgbaTo32(c) {
+        return uint(c.a << 24 | c.r << 16 | c.g << 8 | c.b);
+    }
+    function c32ToRgba(c) {
+        return {
+            a: c >>> 24 &amp; 255,
+            r: c >>> 16 &amp; 255,
+            g: c >>> 8  &amp; 255,
+            b: c >>> 0  &amp; 255
+        }
+    }
+    var items;
+    var itemMap = {};
+    /* Auto complete / item information */
+    $.getJSON('items.json', function(itemJson) {
+        items = itemJson;
+        var ik = Object.keys(items);
+        for (let keyI in ik) {
+            key = ik[keyI];
+            if (items[key].colors != &quot;&quot;) {
+                iColors = items[key].colors.split(&quot;,&quot;);
+                allColors = allColors.concat(iColors);
+            }
+            if (items[key].name !== undefined) {
+                itemMap[items[key].name] = key;
+            }
+        }
+        allColors.push(&quot;105&quot;);
+        allColorsHash = allColors.reduce((h, i) => {
+            if (h[i] === undefined) { h[i] = 0 }
+        h[i] += 1;
+        return h;
+    }, {});
+
+        allColors = Object.keys(allColorsHash);
+        $(&quot;#autocomplete&quot;).attr(&quot;disabled&quot;, false).focus()
+            .autocomplete({
+                source: Object.keys(itemMap)
+            })
+            .on(&quot;autocompleteselect&quot;, function (evt, ui) {
+                if (itemMap[ui.item.label] !== undefined) {
+                    item = items[itemMap[ui.item.label]];
+                    var layering = $(&quot;#layering&quot;).get(0).checked;
+                    if (!layering) {
+                        $(&quot;input[name='avatarId']&quot;).val(1);
+                        $(&quot;input[name='categoryId']&quot;).val(25);
+                    }
+                    $(&quot;input[name='layerId']&quot;).val(item.layerDefId);
+                    $(&quot;input[name='color']&quot;).val(item.colors);
+                    $(&quot;input[type='submit']&quot;).trigger('click');
+                    setTimeout(function () {
+                        $(&quot;#autocomplete&quot;).select();
+                    }, 300);
+                }
+            })
+            .on(&quot;focus&quot;, function () { $(this).select(); return true; });
+    });
+    function changevalue(number) {
+        return function() {
+            var inputElements = document.getElementById(&quot;c&quot; + number);
+            inputElements.style.background = palette[inputElements.value];
+            if (inputElements.value == 100 || inputElements.value == 105 || inputElements.value == 255) {
+                inputElements.style.color = &quot;black&quot;;
+            } else {
+                inputElements.style.color = &quot;white&quot;;
+            };
+        };
+    };
+    var lastClicked;
+    function boxClick(lastBox) {
+        return function() {
+            visibilityType.style.visibility = &quot;visible&quot;;
+            lastClicked = &quot;c&quot; + lastBox
+            document.getElementById(&quot;palettebar&quot;).innerHTML = &quot;Close (&quot; + lastClicked + &quot;)&quot;
+        };
+    };
+    var loop;
+    var visibilityType = document.getElementById(&quot;openclose&quot;);
+    for (loop = 1; loop <=4; loop++) {
+        document.getElementById(&quot;c&quot; + loop).onclick = boxClick(loop);
+        document.getElementById(&quot;c&quot; + loop).onchange = changevalue(loop);
+    };
+    document.getElementById(&quot;palettebar&quot;).onclick = function() {
+      visibilityType.style.visibility = &quot;hidden&quot;;
+    };
+    document.getElementById(&quot;openclose&quot;).style.visibility = &quot;hidden&quot;
+    var palette = ['#793647', '#762626', '#8b4c2b', '#9c8726', '#426b31', '#346851', '#396573', '#263876', '#463779', '#61316c', '#5c2e39', '#563520', '#6a4e31', '#6c643a', '#565a36', '#4b6351', '#33415e', '#3d3443', '#591d1d', '#6d7164', '#c5647d', '#be4b4b', '#e08654', '#fadb4d', '#73ae5a', '#5eab89', '#67a8bb', '#4b66be', '#7b66c6', '#a05aaf', '#965264', '#8c5c3d', '#ad8459', '#b1a669', '#8f9560', '#82a58b', '#5c6f99', '#675a70', '#903838', '#b8bdab', '#ee94ac', '#ed8383', '#ffb48a', '#ffec95', '#a8de90', '#95dbbd', '#98d4e6', '#839bed', '#a895ef', '#d190e0', '#cd8f9f', '#ca9d80', '#ddb890', '#ded39b', '#c5ca9a', '#afd1b9', '#95a7cf', '#a89bb0', '#ce7c7c', '#d7dcca', '#8b8a68', '#82727d', '#69838b', '#1a1a1a', '#666666', '#b3b3b3', '#987b35', '#80421e', '#07050c', '#eb6923', '#26632d', '#805912', '#20d998', '#d9cd20', '#080905', '#070a08', '#1c6075', '#060507', '#090303', '#0b0b0a', '#e7e5b4', '#dac2d3', '#b6dce7', '#333333', '#808080', '#cccccc', '#f7cd66', '#ce723e', '#612f25', '#100911', '#34944f', '#eea621', '#944c22', '#ee555d', '#eb5ba1', '#0d100e', '#2098d9', '#e13a74', '#0e0505', '#82d92b', '#faf8ca', '#eed8e6', '#cceff9', '#4d4d4d', '#999999', '#e6e6e6', '#ffe4a1', '#fca575', '#e1654c', '#140e16', '#8fdc9f', '#ffb870', '#ffd040', '#8c1414', '#f589bd', '#4b87bf', '#4ac3e8', '#45ae53', '#d32626', '#151614', '#853e3e', '#854b3e', '#85593e', '#85633e', '#85713e', '#857d3e', '#84853e', '#77853e', '#63853e', '#3e8565', '#3e857f', '#3e7285', '#3e4e85', '#403e85', '#4d3e85', '#5c3e85', '#693e85', '#783e85', '#853e70', '#853e5a', '#b96161', '#b97161', '#b98261', '#b99061', '#b9a161', '#b9af61', '#b8b961', '#a8b961', '#8fb961', '#61b993', '#61b9b2', '#61a2b9', '#6175b9', '#6461b9', '#7461b9', '#8761b9', '#9761b9', '#a961b9', '#b9619f', '#b96184', '#de9e9e', '#dea99e', '#deb59e', '#debf9e', '#decc9e', '#ded69e', '#dcde9e', '#d1de9e', '#bfde9e', '#9edec2', '#9eded9', '#9ecdde', '#9eacde', '#9f9ede', '#ab9ede', '#b99ede', '#c49ede', '#d29ede', '#de9ecb', '#de9eb7', '#705555', '#705a55', '#706155', '#706355', '#706955', '#706e55', '#707055', '#6b7055', '#637055', '#557065', '#55706f', '#556970', '#555b70', '#565570', '#5b5570', '#615570', '#655570', '#6b5570', '#705569', '#705561', '#a07e7e', '#a0847e', '#a08c7e', '#a0907e', '#a0977e', '#a09c7e', '#a0a07e', '#99a07e', '#90a07e', '#7ea092', '#7ea09e', '#7e97a0', '#7e86a0', '#7f7ea0', '#857ea0', '#8d7ea0', '#937ea0', '#997ea0', '#a07e96', '#a07e8c', '#cbb2b2', '#cbb7b2', '#cbbcb2', '#cbbeb2', '#cbc3b2', '#cbc7b2', '#cbcbb2', '#c6cbb2', '#becbb2', '#b2cbc1', '#b2cbc8', '#b2c3cb', '#b2b8cb', '#b3b2cb', '#b7b2cb', '#bdb2cb', '#c1b2cb', '#c6b2cb', '#cbb2c3', '#cbb2bc', '#d34242', '#d57740', '#e9ce2c', '#75c054', '#4bc993', '#62b4cc', '#4264d3', '#7b60da', '#ae54c1', '#0b180b', '#0e1812', '#0d1717', '#0d0e15', '#110c15', '#000000', '#ffffff'];
+    var loopAgain;
+    for (loopAgain = 0; loopAgain <= 255; loopAgain++) {
+        var addBox = document.getElementById(&quot;boxes&quot;);
+    };
+    function makeHandler(number) {
+        return function() {
+            var changeStyling = document.getElementById(lastClicked);
+            changeStyling.value = number;
+            color = $(&quot;#c1&quot;).val() << 24 | $(&quot;#c2&quot;).val() << 16 | $(&quot;#c3&quot;).val() << 8 | $(&quot;#c4&quot;).val();
+            lastColor = color;
+            updateSliderVals();
+            $(&quot;#color&quot;).html(color);
+            setLayerColor(theLayer, color);
+            paint(0);
+            $(&quot;#&quot; + lastClicked + &quot;out&quot;).html($(&quot;#&quot; + lastClicked).val());
+            if (number == 100 || number == 105 || number == 255) {
+                changeStyling.style.color = &quot;black&quot;;
+                changeStyling.style.background = palette[number];
+            } else {
+                changeStyling.style.color = &quot;white&quot;;
+                changeStyling.style.background = palette[number];
+            };
+        };
+    };
+    var loopFinal = 0
+    while (loopFinal <= 255) {
+        document.getElementById(&quot;colorpalette&quot; + loopFinal).onclick = makeHandler(loopFinal);
+        loopFinal++
+    };
+    dragElement(document.getElementById((&quot;openclose&quot;)));
+
+    function dragElement(elmnt) {
+        if (document.getElementById(elmnt.id + &quot;header&quot;)) {
+        document.getElementById(elmnt.id + &quot;header&quot;).onmousedown = dragMouseDown;
+    } else {
+    elmnt.onmousedown = dragMouseDown;
+    }
+
+    function dragMouseDown(e) {
+        e = e || window.event;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        document.onmousemove = elementDrag;
+    }
+
+    function elementDrag(e) {
+        e = e || window.event;
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        elmnt.style.top = (elmnt.offsetTop - pos2) + &quot;px&quot;;
+        elmnt.style.left = (elmnt.offsetLeft - pos1) + &quot;px&quot;;
+    }
+
+    function closeDragElement() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+    }
+    }
+      </script>
+<ul id=&quot;ui-id-1&quot; tabindex=&quot;0&quot; class=&quot;ui-menu ui-widget ui-widget-content ui-autocomplete ui-front&quot; style=&quot;display: none;&quot;></ul><div role=&quot;status&quot; aria-live=&quot;assertive&quot; aria-relevant=&quot;additions&quot; class=&quot;ui-helper-hidden-accessible&quot;></div></body></html>"></iframe>
+</body>
+</html>
